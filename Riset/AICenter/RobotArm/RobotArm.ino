@@ -6,9 +6,25 @@ Adafruit_PWMServoDriver servo = Adafruit_PWMServoDriver(0x40);
 #define SERVO_FREQ 50
 
 uint8_t armDeg[5] = {90, 90, 90, 90, 90};
+uint8_t nextDeg[5] = {90, 90, 90, 90, 90};
 
 TaskHandle_t serialCommunicationHandle;
 TaskHandle_t armControlHandle;
+
+void serialCommunication(void *pvParameters){
+  while(1){
+    if (Serial.available() > 0){
+      String command = Serial.readStringUntil('\n');
+    }
+  }
+}
+
+void armControl(void *pvParameters){
+  while(1){
+    moveAll(nextDeg[0], nextDeg[1], nextDeg[2], nextDeg[3], nextDeg[4]);
+    vTaskDelay(100/portTICK_PERIOD_MS);
+  }
+}
 
 void moveDefault(){
   // atur nilai default untuk tiap masing masing servo
@@ -52,6 +68,23 @@ void setup() {
   delay(500);
   moveDefault();
   delay(3000); // memberi delay setelah pengaturan posisi default dan memastikan bahwa servo dapat bergerak sesuai
+  xTaskCreate(
+    serialCommunication, // menjalankan fungsi serialCommunication
+    "SerialTask", // menamai tugas sebagai SerialTask
+    128, // memberi nilai stack sebanyak 128
+    NULL, //
+    1, // mengatur prioritas pada tingkat rendah (1 untuk rendah, 3 untuk paling tinggi)
+    NULL
+  );
+
+  xTaskCreate(
+    armControl,
+    "ArmControlMove",
+    128,
+    NULL,
+    1,
+    NULL
+  );
 
 }
 
