@@ -2,8 +2,10 @@ import serial
 import time
 
 # Ganti 'COMX' dengan port serial Arduino Anda (e.g. COM3, /dev/ttyACM0)
-ARDUINO_PORT = 'COM3'
+ARDUINO_PORT = 'COM5'
 BAUD_RATE = 9600
+deg1 = 0
+deg2 = 0
 
 try:
     # Membuka koneksi serial
@@ -12,8 +14,11 @@ try:
 
     while True:
         # Data yang akan dikirim
-        data_to_send = "Hello, Arduino!\n"  # \n sebagai penanda akhir data
-        
+        deg1 = deg1 % 180
+        deg2 = deg2 % 180
+        data_to_send = f"mov({deg1},{deg2})\n"  # \n sebagai penanda akhir data
+        deg1 += 5
+        deg2 += 5
         # Mengirim data
         ser.write(data_to_send.encode())
         print(f"Data terkirim: {data_to_send.strip()}")
@@ -23,7 +28,7 @@ try:
             received_data = ser.readline().decode().strip()
             print(f"Balasan Arduino: {received_data}")
         
-        time.sleep(1)  # Delay antara pengiriman data
+        time.sleep(0.01)  # Delay antara pengiriman data
 
 except serial.SerialException as e:
     print(f"Error koneksi serial: {e}")

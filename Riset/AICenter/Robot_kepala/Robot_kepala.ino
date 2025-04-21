@@ -56,6 +56,9 @@ void processCommand(const char* command) {
     }
     else {
       Serial.println("ERROR: Invalid command");
+      String data = Serial.readStringUntil('\n');
+       int nilai = data.toInt();
+      moveAll(nilai,90);
     }
 
     xSemaphoreGive(xSerialMutex);
