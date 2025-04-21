@@ -8,7 +8,6 @@ uint8_t armDeg[5] = {90, 90, 90, 90, 90};
 uint8_t nextDeg[5] = {90, 90, 90, 90, 90};
 
 TaskHandle_t serialCommunicationHandle;
-TaskHandle_t armControlHandle;
 
 void serialCommunication(void *pvParameters){
   while(1){
