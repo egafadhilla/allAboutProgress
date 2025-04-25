@@ -1,0 +1,13 @@
+cek dahulu pada device manager apakah port yang digunakan terdeteksi jika ada maka coba jalankan perintah dibawah menggunaan terminal (windows power shell)
+
+tasklist | findstr python
+(untuk menampilkan list kesibukan port berdasarkan tugas python)
+
+taskkill /F /IM python.exe
+(untuk clear semua tugas tersebut sehingga beban kerjanya port com kosong)
+
+tasklist | findstr esptool
+(sama fungsinya seperti python namun ini untuk tugas dari esptool)
+
+taskkill /F /IM esptool.exe
+(fungsinya untuk clear penugasan oleh esptool)
