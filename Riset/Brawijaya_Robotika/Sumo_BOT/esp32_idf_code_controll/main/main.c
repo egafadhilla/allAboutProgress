@@ -113,5 +113,6 @@ void app_main(void) {
         printf("Motor stop\n");
         motor_control(0);
         vTaskDelay(2000 / portTICK_PERIOD_MS);
+        //hallo hallo nyoba
     }
 }
