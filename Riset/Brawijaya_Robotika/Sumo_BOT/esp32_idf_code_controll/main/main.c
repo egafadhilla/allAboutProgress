@@ -5,16 +5,16 @@
 #include "driver/ledc.h"
 
 // Konfigurasi Pin BTS7960
-#define R_EN_GPIO     4   // Right Enable
-#define L_EN_GPIO     5   // Left Enable
-#define RPWM_GPIO     18  // Right PWM
-#define LPWM_GPIO     19  // Left PWM
+#define R_EN_GPIO     16   // Right Enable
+#define L_EN_GPIO     17   // Left Enable
+#define RPWM_GPIO     5  // Right PWM
+#define LPWM_GPIO     18  // Left PWM
 
 // Konfigurasi PWM
 #define LEDC_TIMER        LEDC_TIMER_0
 #define LEDC_MODE         LEDC_LOW_SPEED_MODE
-#define LEDC_DUTY_RESOL   LEDC_TIMER_8_BIT  // Resolusi 8-bit (0-255)
-#define LEDC_FREQUENCY    5000              // Frekuensi 5kHz
+#define LEDC_DUTY_RESOL   LEDC_TIMER_10_BIT  // Resolusi 10-bit (0-1023)
+#define LEDC_FREQUENCY    100              // Frekuensi 20kHz
 
 void motor_init() {
     // Inisialisasi pin Enable
@@ -68,7 +68,7 @@ void motor_init() {
 
 void motor_control(int speed) {
     // Batasi kecepatan antara -255 sampai 255
-    speed = (speed > 255) ? 255 : ((speed < -255) ? -255 : speed);
+    speed = (speed > 1023) ? 1023 : ((speed < -1023) ? -1023 : speed);
 
     if(speed > 0) { // Putar ke arah kanan
         ledc_set_duty(LEDC_MODE, LEDC_CHANNEL_0, speed);
@@ -95,7 +95,7 @@ void app_main(void) {
 
     while(1) {
         printf("Motor maju...\n");
-        for(int i=0; i<=255; i++) {
+        for(int i=0; i<=1023; i+=4) {
             motor_control(i);
             vTaskDelay(10 / portTICK_PERIOD_MS);
         }
@@ -103,7 +103,7 @@ void app_main(void) {
         vTaskDelay(2000 / portTICK_PERIOD_MS);
         
         printf("Motor mundur...\n");
-        for(int i=0; i<=255; i++) {
+        for(int i=0; i<=1023; i+=4) {
             motor_control(-i);
             vTaskDelay(10 / portTICK_PERIOD_MS);
         }
