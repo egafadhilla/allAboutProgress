@@ -1,0 +1,12 @@
+[submodule "Riset/Brawijaya_Robotika/PS3_Receiver/components/ps3"]
+	path = Riset/Brawijaya_Robotika/PS3_Receiver/components/ps3
+	url = https://github.com/jvpernis/esp32-ps3.git
+[submodule "Riset/Brawijaya_Robotika/Sumo_BOT/components/ps3"]
+	path = Riset/Brawijaya_Robotika/Sumo_BOT/components/ps3
+	url = https://github.com/jvpernis/esp32-ps3.git
+[submodule "Riset/Brawijaya_Robotika/Sumo_BOT/controll/components/ps3"]
+	path = Riset/Brawijaya_Robotika/Sumo_BOT/controll/components/ps3
+	url = https://github.com/jvpernis/esp32-ps3.git
+[submodule "Riset/Brawijaya_Robotika/Sumo_BOT/Control/components/ps3"]
+	path = Riset/Brawijaya_Robotika/Sumo_BOT/Control/components/ps3
+	url = https://github.com/jvpernis/esp32-ps3.git
