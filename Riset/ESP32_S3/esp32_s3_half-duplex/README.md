@@ -1,32 +1,42 @@
-# _Sample project_
+## ESP32-S3 Half-duplex UART for Dynamixel AX-12A (ESP-IDF 5.4.0)
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+This example shows how to talk to a Dynamixel AX-12A servo using a single-wire, half-duplex UART bus on the ESP32-S3 with ESP-IDF 5.4.0.
 
-This is the simplest buildable example. The example is used by command `idf.py create-project`
-that copies the project to user specified path and set it's name. For more information follow the [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project)
+It implements a minimal Protocol 1.0 driver and demonstrates ping, torque enable, LED, set goal position, and read present position.
 
+### Hardware
 
+- ESP32-S3 board
+- Dynamixel AX-12A (TTL 5V)
+- Power supply 12V for the servo (shared ground with ESP32)
+- Half-duplex interface between ESP32 and Dynamixel bus. Options:
+	- A ready-made TTL half-duplex adapter for Dynamixel.
+	- Or build with a buffer/driver (e.g., 74HC125/126 or a transistor + resistors) so that TX and RX share the same Data line safely. Avoid connecting ESP32 pins directly to the 5V bus.
 
-## How to use example
-We encourage the users to use the example as a template for the new projects.
-A recommended way is to follow the instructions on a [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project).
+Default pins in code:
 
-## Example folder contents
+- Data: GPIO17 (both TX and RX mapped to same pin)
+- Direction (TX enable): GPIO18 (HIGH=TX drive, LOW=RX Hi-Z)
+- UART used: UART1
 
-The project **sample_project** contains one source file in C language [main.c](main/main.c). The file is located in folder [main](main).
+Adjust these in `main/main.c` to match your wiring.
 
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt`
-files that provide set of directives and instructions describing the project's source files and targets
-(executable, library, or both). 
+### Build and flash
 
-Below is short explanation of remaining files in the project folder.
+Requires ESP-IDF 5.4.0. Set the target to esp32s3 and flash:
 
-```
-├── CMakeLists.txt
-├── main
-│   ├── CMakeLists.txt
-│   └── main.c
-└── README.md                  This is the file you are currently reading
-```
-Additionally, the sample project contains Makefile and component.mk files, used for the legacy Make based build system. 
-They are not used or needed when building with CMake and idf.py.
+```powershell
+idf.py set-target esp32s3 ; idf.py build ; idf.py -p COMx flash monitor
+
+Replace COMx with your port.
+
+### Notes
+
+- AX-12A default: ID=1, baud=1,000,000 bps.
+- Ensure ground is shared between ESP32 and the servo power supply.
+- Status Return Level on AX-12A normally returns status for all instructions; this code reads and validates the response.
+- If you need another baud or ID, use the helper functions in `dynamixel_ax12a.h` (e.g., `ax_set_baud`, `ax_set_id`). Changing these requires torque off.
+
+### Safety
+
+Provide proper 5V TTL interface and isolation to avoid damaging the ESP32 (which is 3.3V) and ensure the servo has adequate power.
